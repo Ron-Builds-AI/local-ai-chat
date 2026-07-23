@@ -1,0 +1,7 @@
+# Python bytecode — never publish compiled artifacts; the pitch is "read the source."
+__pycache__/
+*.pyc
+
+# Saved conversation transcripts from the /save command. These are private by nature —
+# they must never be committed to a public repo.
+chat_*.txt
