@@ -2,6 +2,12 @@
 __pycache__/
 *.pyc
 
-# Saved conversation transcripts from the /save command. These are private by nature —
+# Saved conversation transcripts from the /save command and the `wrap logs` verb,
+# plus the per-turn metadata sidecar `wrap logs` keeps. These are private by nature —
 # they must never be committed to a public repo.
 chat_*.txt
+chat_*.jsonl
+
+# Internal staging notes — never part of the public repo. Listed here so even a
+# `git add -A` cannot carry them along (the underscore prefix means nothing to git).
+_PUSH_NOTES_FOR_RON.md

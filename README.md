@@ -1,12 +1,13 @@
 # Your Private Local AI (free, chat-only)
 
-A private AI in one Python file. It runs on your machine, talks only to your own
+A private AI in two short Python files — the chat client (`chat.py`) and the shared
+plumbing it runs on (`myai_core.py`). It runs on your machine, talks only to your own
 [Ollama](https://ollama.com), and has no network door: it opens no port and listens
 for nothing, so it can only be used from the machine itself. This client never sends
 your prompts anywhere but your own loopback Ollama.
 
-No account. No API key. No telemetry. No cloud. Read the source — it's one file, and it
-was written to be read.
+No account. No API key. No telemetry. No cloud. Read the source — two short files,
+written to be read.
 
 ## What you need
 
