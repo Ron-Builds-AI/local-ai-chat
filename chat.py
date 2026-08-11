@@ -31,6 +31,7 @@ leftovers up.
 import argparse
 import datetime
 import os
+import re
 import sys
 import urllib.error
 import urllib.parse
@@ -101,18 +102,35 @@ _CRISIS_PHRASES = (
     "better off dead", "better off without me", "wish i was dead", "wish i were dead",
     "wish i wasnt here", "take my own life", "taking my own life", "want to overdose",
     "end it all", "cant go on",
+    # ---- 2026-08-05 gap hunt (canonical: dashboard\crisis_guard.py) ---------------------
+    # Mirrored in the same change. Verify with: python dashboard\probe_crisis_mirrors.py
+    "sucide", "suicidle", "suicial", "sucidal", "kil myself",
+    "kill my self", "killing my self", "hurt my self", "harm my self",
+    "cutting myself", "cutting my self", "burn myself", "burning myself",
+    "starve myself", "starving myself",
+    "pills on purpose", "overdosed on purpose",
+    "someone would kill me", "if i was dead", "if i were dead",
+    "want to just die", "want to honestly die", "want to really die",
+    "just want to die",
 )
 
 
 def _crisis_normalize(text):
-    """Lowercase; fold apostrophes out ("don't" -> "dont"); dashes to spaces; collapse
-    whitespace. Identical to the canonical _normalize so the surfaces can never drift."""
-    return " ".join(
-        str(text).lower()
-        .replace("’", "").replace("‘", "").replace("'", "")
-        .replace("-", " ")
-        .split()
-    )
+    """Lowercase; fold apostrophes out ("don't" -> "dont"); fold expanded contractions to the
+    same form ("do not" -> "dont"); dashes to spaces; collapse whitespace. Identical to the
+    canonical _normalize so the surfaces can never drift.
+
+    The expanded-contraction fold was added 2026-08-05 after a measured live miss: every
+    phrase is stored apostrophe-stripped ("dont want to be alive"), so "I do not want to be
+    alive anymore" matched nothing. Word boundaries are mandatory - without them "have not"
+    would eat "have nothing" and BREAK an existing match."""
+    t = (str(text).lower()
+         .replace("’", "").replace("‘", "").replace("'", "")
+         .replace("-", " "))
+    t = re.sub(r"\b(do|ca|wo|is|did|was|are|have|could|should|would|ai)n\s+t\b", r"\1nt", t)
+    t = re.sub(r"\bdo not\b", "dont", t)
+    t = re.sub(r"\bcan ?not\b", "cant", t)
+    return " ".join(t.split())
 
 
 def crisis_hit(text):
